@@ -11,6 +11,7 @@ MainWindow::MainWindow( QWidget* parent ) : QMainWindow( parent ), ui( new Ui::M
 
     connect( i_dialog, &init_dialog::signal_isServer, this, &MainWindow::slot_isServer );
     connect( i_dialog, &init_dialog::signal_isClient, this, &MainWindow::slot_isClient );
+    connect( ui->btn_exit, &QPushButton::clicked, this, &MainWindow::slot_onClickBtnExit);
 
     i_dialog->show();
 }
@@ -23,7 +24,7 @@ void MainWindow::start() {
     if ( isServer && !isClient ) {
         new server;
     } else if ( !isServer && isClient ) {
-        new server;
+        new client;
     }
 }
 
@@ -39,4 +40,9 @@ void MainWindow::slot_isClient() {
     isClient = true;
     i_dialog->close();
     start();
+}
+
+void MainWindow::slot_onClickBtnExit() {
+    //disconnect + clean up
+    close();
 }

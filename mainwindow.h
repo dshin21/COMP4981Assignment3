@@ -28,6 +28,7 @@ private:
 public slots:
     void slot_isServer();
     void slot_isClient();
+    void slot_onClickBtnExit();
 };
 
 #endif // MAINWINDOW_H
