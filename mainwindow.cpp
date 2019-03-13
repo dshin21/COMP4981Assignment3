@@ -13,6 +13,11 @@ MainWindow::MainWindow( QWidget* parent ) : QMainWindow( parent ), ui( new Ui::M
     connect( i_dialog, &init_dialog::signal_isClient, this, &MainWindow::slot_isClient );
     connect( ui->btn_exit, &QPushButton::clicked, this, &MainWindow::slot_onClickBtnExit);
 
+    ui->console->hide();
+    ui->type_box->hide();
+    ui->btn_exit->hide();
+    ui->btn_send->hide();
+
     i_dialog->show();
 }
 
@@ -22,8 +27,14 @@ MainWindow::~MainWindow() {
 
 void MainWindow::start() {
     if ( isServer && !isClient ) {
+        ui->console->show();
+        ui->btn_exit->show();
         new server;
     } else if ( !isServer && isClient ) {
+        ui->console->show();
+        ui->type_box->show();
+        ui->btn_exit->show();
+        ui->btn_send->show();
         new client;
     }
 }
