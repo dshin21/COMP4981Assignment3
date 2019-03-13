@@ -27,11 +27,15 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    init_dialog.cpp
+    init_dialog.cpp \
+    server.cpp \
+    client.cpp
 
 HEADERS += \
         mainwindow.h \
-    init_dialog.h
+    init_dialog.h \
+    server.h \
+    client.h
 
 FORMS += \
         mainwindow.ui \

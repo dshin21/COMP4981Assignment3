@@ -1,6 +1,7 @@
+#include <QDebug>
+
 #include "client.h"
 
-client::client()
-{
-
+client::client() {
+    qDebug() << "client";
 }

@@ -1,6 +1,7 @@
+#include <QDebug>
+
 #include "server.h"
 
-server::server()
-{
-
+server::server() {
+    qDebug() << "server";
 }

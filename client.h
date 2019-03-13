@@ -2,8 +2,7 @@
 #define CLIENT_H
 
 
-class client
-{
+class client {
 public:
     client();
 };

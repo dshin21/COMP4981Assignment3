@@ -1,6 +1,9 @@
+#include <QDebug>
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QDebug>
+#include "server.h"
+#include "client.h"
 
 MainWindow::MainWindow( QWidget* parent ) : QMainWindow( parent ), ui( new Ui::MainWindow ),
                                             i_dialog( new init_dialog ) {
@@ -18,9 +21,9 @@ MainWindow::~MainWindow() {
 
 void MainWindow::start() {
     if ( isServer && !isClient ) {
-        qDebug() << "server";
+        new server;
     } else if ( !isServer && isClient ) {
-        qDebug() << "client";
+        new server;
     }
 }
 
