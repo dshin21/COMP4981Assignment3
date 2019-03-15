@@ -105,17 +105,18 @@ class Stage extends Component {
     };
 
     renderMessages = () => {
-        return this.state.messages.map((e, i) => {
-            {
-                return (
-                  <Message key={i}
-                           updateMessages={this.updateMessages}
-                           updateUsers={this.updateUsers}
-                           isMyMsg={e.id === this.state.myID}
-                           message={e.msg}/>
-                );
-            }
-        });
+        if (this.state.messages.length !== 0)
+            return this.state.messages.map((e, i) => {
+                {
+                    return (
+                      <Message key={i}
+                               updateMessages={this.updateMessages}
+                               updateUsers={this.updateUsers}
+                               isMyMsg={e.id === this.state.myID}
+                               message={e.msg}/>
+                    );
+                }
+            });
     };
 
     render() {
@@ -140,7 +141,7 @@ class Stage extends Component {
                       {this.state.messages.length !== 0 ? this.renderMessages() :
                         <Message updateMessages={this.updateMessages}
                                  updateUsers={this.updateUsers}
-                                 myID={99}/>}
+                                 message={`Welcome!`}/>}
                   </Paper>
               </Grid>
           </Grid>
