@@ -29,13 +29,13 @@ void MainWindow::start() {
     if ( isServer && !isClient ) {
         ui->console->show();
         ui->btn_exit->show();
-        new server;
+        server();
     } else if ( !isServer && isClient ) {
         ui->console->show();
         ui->type_box->show();
         ui->btn_exit->show();
         ui->btn_send->show();
-        new client;
+//        new client;
     }
 }
 
