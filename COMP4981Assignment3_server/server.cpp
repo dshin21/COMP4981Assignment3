@@ -56,6 +56,7 @@ int main() {
                 SystemFatal( "accept error" );
 
             printf( " \nRemote Address:  %s\n", inet_ntoa( client_addr.sin_addr ) );
+
             fflush( stdout );
 
             for ( i = 0; i < FD_SETSIZE; i++ ) {
@@ -63,6 +64,12 @@ int main() {
                     client[ i ] = new_sd;
                     sin_addrArr[ i ] = client_addr.sin_addr;// here
                     sscanf( inet_ntoa( client_addr.sin_addr ), "%s", client_address_arr[ i ] );// here
+
+                    //send new client its id
+                    char s_buf[BUFLEN];
+                    sprintf( s_buf, "CID:%d", i );
+                    write( new_sd, s_buf, BUFLEN );
+
                     break;
                 }
             }
@@ -98,11 +105,10 @@ int main() {
                     int currentSockfd = sockfd;
                     int currentIndex = i;
 
-//                    printf( "client# %d IP:%s message:\t\t%s\r\n", currentIndex, client_address_arr[ currentIndex ],
-//                            buf );
                     fflush( stdout );
 
                     for ( i = 0; i <= maxi; i++ ) {
+
                         if ( ( sockfd = client[ i ] ) < 0 || sockfd == currentSockfd ) continue;
 
                         char tempSendCombine[BUFLEN];

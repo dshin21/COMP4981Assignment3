@@ -50,7 +50,7 @@ class Message extends Component {
                   </Grid>
               </Grid>
             );
-    }
+    }//TODO: make client input the port and ip
 }
 
 const styles = theme => ({
