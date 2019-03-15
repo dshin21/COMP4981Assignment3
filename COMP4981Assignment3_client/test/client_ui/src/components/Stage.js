@@ -10,21 +10,44 @@ class Stage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            ipAddress:   this.props.ipAddress,
-            portNumber:  this.props.portNumber,
-            message:     false,
-            spacing:     '16',
-            endpoint:    "http://127.0.0.1:4001",
-            clients:     [],
-            messages:    [],
-            messageList: [],
-            myID:        false
+            ipAddress:  this.props.ipAddress,
+            portNumber: this.props.portNumber,
+            message:    false,
+            spacing:    '16',
+            endpoint:   "http://127.0.0.1:4001",
+            clients:    [],
+            messages:   [],
+            myID:       false
         };
 
         const {endpoint} = this.state;
         const socket = socketIOClient(endpoint);
         socket.emit('FromClient', this.state.ipAddress + ' ' + this.state.portNumber);
     }
+
+    componentDidMount() {
+        this.getInitInfo();
+    }
+
+    getInitInfo = () => {
+        const {endpoint} = this.state;
+        const socket = socketIOClient(endpoint);
+
+        socket.emit('sendInit', ' ');
+
+        socket.on("receiveInit", data => this.setState({message: data},
+          () => {
+              console.log("getinitinfo");
+              if (data.length === 4)
+                  this.updateUsers([data[2], data[0]]);
+              if (data.length === 5) {
+                  console.log(data);
+                  this.updateUsers([data[0], data[1]]);
+                  this.updateMessages(data[0], data[2]);
+              }
+          }
+        ));
+    };
 
     updateUsers = (newClientID) => {
         let temp = this.state.clients;
@@ -41,10 +64,9 @@ class Stage extends Component {
             };
             temp.push(obj);
             this.setState({clients: temp}, () => {
+                console.log(this.state.clients);
                 if (this.state.myID === false)
-                    this.setState({myId: this.state.clients[0].id}
-                      // , () => console.log(this.state.myId)
-                    );
+                    this.setState({myId: this.state.clients[0].id});
             });
         }
     };
@@ -64,7 +86,6 @@ class Stage extends Component {
 
     updateMessages = (id, msg) => {
         let temp = this.state.messages;
-        console.log(this.state.messages);
         let obj = {
             id:  id.split(':')[1],
             msg: msg
@@ -73,20 +94,18 @@ class Stage extends Component {
         temp.push(obj);
 
         this.setState({messages: temp});
-
-        let tempMsgList = this.state.messageList;
-        tempMsgList.push(<Message key={this.state.messages.length}
-                                  updateMessages={this.updateMessages}
-                                  updateUsers={this.updateUsers}
-                                  isMyMsg={obj.id === this.state.myID}
-                                  message={obj.msg}/>);
-        this.setState({messageList: tempMsgList});
     };
 
     renderMessages = () => {
-        return this.state.messageList.map((e) => {
+        return this.state.messages.map((e, i) => {
             {
-                return (e);
+                return (
+                  <Message key={i}
+                           updateMessages={this.updateMessages}
+                           updateUsers={this.updateUsers}
+                           isMyMsg={e.id === this.state.myID}
+                           message={e.msg}/>
+                );
             }
         });
     };

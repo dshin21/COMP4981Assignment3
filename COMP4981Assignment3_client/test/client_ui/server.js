@@ -32,13 +32,14 @@ io.on("connection", socket => {
     socket.on("sendInit", data => {
         subProcess.stdout.on("data", data => {
             let inArr = data.toString().split("\n");
+            console.log(inArr);
             socket.emit("receiveInit", inArr);
         });
-        start = true;
     });
 
     socket.on("sendUpdates", data => {
         subProcess.stdout.on("data", data => {
+            console.log("sendUpdates");
             let inArr = data.toString().split("\n");
             socket.emit("receiveUpdates", inArr);
         });

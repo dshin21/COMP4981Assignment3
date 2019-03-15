@@ -3,7 +3,6 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import socketIOClient from "socket.io-client";
 
 class Message extends Component {
     constructor(props) {
@@ -11,33 +10,9 @@ class Message extends Component {
         this.state = {
             isMyMsg:  this.props.isMyMsg,
             message:  this.props.message,
-            endpoint: "http://127.0.0.1:4001",
             clientID: false //TODO: if the received msg == clientID, send isMyMsg=true
         };
     }
-
-    componentDidMount() {
-        this.getInitInfo();
-    }
-
-    getInitInfo = () => {
-        const {endpoint} = this.state;
-        const socket = socketIOClient(endpoint);
-        socket.emit('sendInit', ' ');
-        socket.on("receiveInit", data => this.setState({message: data},
-          () => {
-              if (data.length === 4)
-                  this.sendInfoUpForUpdate([data[2], data[0]]);
-              if (data.length === 5) {
-                  this.sendInfoUpForUpdate([data[0], data[1]]);
-              }
-          }
-        ));
-    };
-
-    sendInfoUpForUpdate = (newID) => {
-        this.props.updateUsers(newID);
-    };
 
     render() {
         const {classes} = this.props;
