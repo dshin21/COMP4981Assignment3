@@ -20,8 +20,7 @@ class Stage extends Component {
             myID:       false
         };
 
-        const {endpoint} = this.state;
-        const socket = socketIOClient(endpoint);
+        const socket = socketIOClient(this.state.endpoint);
         socket.emit('FromClient', this.state.ipAddress + ' ' + this.state.portNumber);
     }
 
@@ -30,16 +29,16 @@ class Stage extends Component {
     }
 
     getInitInfo = () => {
-        const {endpoint} = this.state;
-        const socket = socketIOClient(endpoint);
-
+        const socket = socketIOClient(this.state.endpoint);
         socket.emit('sendInit', ' ');
 
         socket.on("receiveInit", data => this.setState({message: data},
           () => {
               console.log("getinitinfo");
-              if (data.length === 4)
+              console.log(data);
+              if (data.length === 4) {
                   this.updateUsers([data[2], data[0]]);
+              }
               if (data.length === 5) {
                   console.log(data);
                   this.updateUsers([data[0], data[1]]);
