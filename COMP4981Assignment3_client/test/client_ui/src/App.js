@@ -1,4 +1,5 @@
 import React, {Component} from "react";
+import Message from './components/Message'
 import socketIOClient from "socket.io-client";
 
 class App extends Component {
