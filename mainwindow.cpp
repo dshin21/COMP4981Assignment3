@@ -35,7 +35,7 @@ void MainWindow::start() {
         ui->type_box->show();
         ui->btn_exit->show();
         ui->btn_send->show();
-//        new client;
+        client();
     }
 }
 

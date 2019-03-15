@@ -32,7 +32,7 @@ void server() {
      maxfd = listen_sd;
      maxi = -1;
 
-     for ( i = 0; i < FD_SETSIZE; ++i ) client[ i ] = -1;
+     for ( i = 0; i < FD_SETSIZE; ++i ) clients[ i ] = -1;
 
      FD_ZERO( &allset );
      FD_SET( listen_sd, &allset );
@@ -51,8 +51,8 @@ void server() {
              fflush( stdout );
 
              for ( i = 0; i < FD_SETSIZE; i++ ) {
-                 if ( client[ i ] < 0 ) {
-                     client[ i ] = new_sd;
+                 if ( clients[ i ] < 0 ) {
+                     clients[ i ] = new_sd;
                      sin_addrArr[ i ] = client_addr.sin_addr;// here
                      sscanf( inet_ntoa( client_addr.sin_addr ), "%s", client_address_arr[ i ] );// here
                      break;
@@ -72,7 +72,7 @@ void server() {
          }
 
          for ( i = 0; i <= maxi; i++ ) {
-             if ( ( sockfd = client[ i ] ) < 0 ) continue;
+             if ( ( sockfd = clients[ i ] ) < 0 ) continue;
 
              if ( FD_ISSET( sockfd, &rset ) ) {
                  bp = buf;
@@ -95,7 +95,7 @@ void server() {
                      fflush( stdout );
 
                      for ( i = 0; i <= maxi; i++ ) {
-                         if ( ( sockfd = client[ i ] ) < 0 || sockfd == currentSockfd ) continue;
+                         if ( ( sockfd = clients[ i ] ) < 0 || sockfd == currentSockfd ) continue;
 
                          char tempSendCombine[BUFLEN];
                          sprintf( tempSendCombine, "%d::::%s:::%s", currentIndex, client_address_arr[ currentIndex ],
@@ -119,5 +119,5 @@ void clean( int clientIndex, int closeSockfd ) {
     fflush( stdout );
     close( closeSockfd );
     FD_CLR( closeSockfd, &allset );
-    client[ clientIndex ] = -1;
+    clients[ clientIndex ] = -1;
 }

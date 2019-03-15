@@ -17,7 +17,7 @@
 #define LISTENQ    5
 
 static char client_address_arr[FD_SETSIZE][20];
-static int client[FD_SETSIZE];
+static int clients[FD_SETSIZE];
 static fd_set rset, allset;
 
 void server();
