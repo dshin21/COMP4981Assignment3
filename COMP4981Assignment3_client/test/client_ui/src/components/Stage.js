@@ -16,6 +16,9 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import Avatar from '@material-ui/core/Avatar';
+import deepOrange from '@material-ui/core/colors/deepOrange';
+import deepPurple from '@material-ui/core/colors/deepPurple';
 import Paper from '@material-ui/core/Paper';
 import {withStyles} from '@material-ui/core/styles';
 
@@ -88,17 +91,20 @@ class Stage extends Component {
 
             tempClients.push(obj);
             this.setState({clients: tempClients}, () => {
-                if (this.state.myID === false)
-                    this.setState({myId: this.state.clients[0].id});
+                // if (this.state.myID === false)
+                this.setState({myId: this.state.clients[0].id});
             });
         }
     };
 
     renderClientList = () => {
+        const {classes} = this.props;
+        const colors = ['orangeAvatar', 'purpleAvatar', 'avatar'];
         return this.state.clients.map((e, i) => {
             return (
               <ListItem button key={i}>
-                  <ListItemText primary={`User ${e.id} : ${e.ip}`}/>
+                  <Avatar className={i > 2 ? classes.avatar : classes[colors[i]]}>{e.id}</Avatar>
+                  <ListItemText primary={`${e.ip}`}/>
               </ListItem>
             );
         });
@@ -111,22 +117,32 @@ class Stage extends Component {
             msg: newMsgObj.msg
         };
         temp.push(obj);
-        this.setState({messages: temp});
+        this.setState({messages: temp}, () => console.log(this.state.messages));
     };
 
     renderMessages = () => {
-        if (this.state.messages.length !== 0)
+        if (this.state.messages.length !== 0) {
+            console.log(this.state.messages);
             return this.state.messages.map((e, i) => {
                 {
                     return (
                       <Message key={i}
                                updateMessages={this.updateMessages}
                                updateUsers={this.updateUsers}
-                               isMyMsg={e.id === this.state.myID}
-                               message={e.msg}/>
+                               isMyMsg={e.id == this.state.myID}
+                               message={e.msg}
+                               clientID={e.id}/>
                     );
                 }
             });
+        }
+    };
+
+    onClickSubmit = (msg) => {
+        this.updateMessages({
+            id:  this.state.clients[0].id,
+            msg: msg.msg
+        });
     };
 
     render() {
@@ -196,14 +212,16 @@ class Stage extends Component {
               <main className={classes.content}>
                   <div className={classes.toolbar}/>
                   <Grid container className={classes.root} spacing={16}>
-                      <Grid item xs={9}>
+                      <Grid item xs={12}>
                           {this.state.messages.length !== 0 ? this.renderMessages() :
                             <Message updateMessages={this.updateMessages}
                                      updateUsers={this.updateUsers}
-                                     message={`SYSTEM: Welcome!`}/>}
+                                     message={`SYSTEM: Welcome!`}
+                                     isSystem={true}/>
+                          }
                       </Grid>
                       <Grid item xs={12}>
-                          <InputBox/>
+                          <InputBox onClickSubmit={this.onClickSubmit}/>
                       </Grid>
                   </Grid>
               </main>
@@ -215,39 +233,52 @@ class Stage extends Component {
 const drawerWidth = 240;
 
 const styles = theme => ({
-    root:        {
+    root:         {
         display: 'flex',
     },
-    drawer:      {
+    drawer:       {
         [theme.breakpoints.up('sm')]: {
             width:      drawerWidth,
             flexShrink: 0,
         },
     },
-    appBar:      {
+    appBar:       {
         marginLeft:                   drawerWidth,
         [theme.breakpoints.up('sm')]: {
             width: `calc(100% - ${drawerWidth}px)`,
         },
     },
-    menuButton:  {
+    menuButton:   {
         marginRight:                  20,
         [theme.breakpoints.up('sm')]: {
             display: 'none',
         },
     },
-    toolbar:     theme.mixins.toolbar,
-    drawerPaper: {
+    toolbar:      theme.mixins.toolbar,
+    drawerPaper:  {
         width: drawerWidth,
     },
-    content:     {
+    content:      {
         flexGrow:        1,
         padding:         theme.spacing.unit * 3,
         backgroundColor: '#FAFAFA',
     },
-    paper:       {
+    paper:        {
         height: '90%',
         width:  '90%'
+    },
+    avatar:       {
+        margin: 10,
+    },
+    orangeAvatar: {
+        margin:          10,
+        color:           '#fff',
+        backgroundColor: deepOrange[500],
+    },
+    purpleAvatar: {
+        margin:          10,
+        color:           '#fff',
+        backgroundColor: deepPurple[500],
     },
 });
 

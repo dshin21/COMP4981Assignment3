@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import {withStyles} from '@material-ui/core/styles';
 import InputBase from '@material-ui/core/InputBase';
 import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
+import NavigationIcon from '@material-ui/icons/Navigation';
+import Fab from '@material-ui/core/Fab';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 
 class InputBox extends Component {
@@ -18,13 +19,17 @@ class InputBox extends Component {
         this.setState({userInput: e.target.value});
     };
 
+    onClickSubmit = () => {
+        this.props.onClickSubmit({msg:this.state.userInput});
+        this.setState({userInput: ''});
+    };
+
     render() {
         const {classes} = this.props;
 
         return (
           <BottomNavigation
             onChange={this.handleChange}
-            showLabels
             className={classes.root}
           >
               <InputBase className={classes.input}
@@ -33,8 +38,17 @@ class InputBox extends Component {
                          onChange={this.handleChange.bind(this)}
               />
               <Divider className={classes.divider}/>
-              <IconButton color="primary" className={classes.iconButton} aria-label="Directions">
-              </IconButton>
+              <Fab
+                variant="extended"
+                size="small"
+                color="primary"
+                aria-label="Add"
+                className={classes.margin}
+                onClick={this.onClickSubmit}
+              >
+                  <NavigationIcon className={classes.extendedIcon}/>
+                  Send
+              </Fab>
           </BottomNavigation>
         );
     }
@@ -53,6 +67,7 @@ const styles = theme => ({
     },
     input:      {
         marginLeft: 8,
+        marginRight: 8,
         flex:       1,
     },
     iconButton: {
