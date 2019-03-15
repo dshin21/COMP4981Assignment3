@@ -21,49 +21,60 @@ class Stage extends Component {
         };
 
         const socket = socketIOClient(this.state.endpoint);
-        socket.emit('FromClient', this.state.ipAddress + ' ' + this.state.portNumber);
+        socket.emit('sendClientInfo', this.state.ipAddress + ' ' + this.state.portNumber);
     }
 
     componentDidMount() {
-        this.getInitInfo();
+        this.getUpdates();
     }
 
-    getInitInfo = () => {
+    getUpdates = () => {
         const socket = socketIOClient(this.state.endpoint);
-        socket.emit('sendInit', ' ');
+        socket.emit('sendUpdates', ' ');
 
-        socket.on("receiveInit", data => this.setState({message: data},
+        socket.on("receiveUpdates", data => this.setState({message: data},
           () => {
-              console.log("getinitinfo");
-              console.log(data);
               if (data.length === 4) {
-                  this.updateUsers([data[2], data[0]]);
+                  let parsedID = data[2].split(':')[1];
+                  let parsedIP = data[0].split(':')[1];
+                  let temp = {
+                      id: parsedID,
+                      ip: parsedIP
+                  };
+                  this.updateUsers(temp);
               }
               if (data.length === 5) {
-                  console.log(data);
-                  this.updateUsers([data[0], data[1]]);
-                  this.updateMessages(data[0], data[2]);
+                  let parsedID = data[0].split(':')[1];
+                  let parsedIP = data[1].split(':')[1];
+                  let temp = {
+                      id:  parsedID,
+                      ip:  parsedIP,
+                      msg: data[2]
+                  };
+                  this.updateUsers(temp);
+                  this.updateMessages(temp);
               }
           }
         ));
     };
 
-    updateUsers = (newClientID) => {
-        let temp = this.state.clients;
+    updateUsers = (newClientObj) => {
+        let tempClients = this.state.clients;
         let exists = false;
 
-        for (let i = 0; i < temp.length; i++) {
-            if (temp[i].id == newClientID[0].split(':')[1]) exists = true;
+        for (let i = 0; i < tempClients.length; i++) {
+            if (tempClients[i].id === newClientObj.id)
+                exists = true;
         }
 
         if (!exists) {
             let obj = {
-                id: newClientID[0].split(':')[1],
-                ip: newClientID[1].split(':')[1]
+                id: newClientObj.id,
+                ip: newClientObj.ip
             };
-            temp.push(obj);
-            this.setState({clients: temp}, () => {
-                console.log(this.state.clients);
+
+            tempClients.push(obj);
+            this.setState({clients: tempClients}, () => {
                 if (this.state.myID === false)
                     this.setState({myId: this.state.clients[0].id});
             });
@@ -83,15 +94,13 @@ class Stage extends Component {
         });
     };
 
-    updateMessages = (id, msg) => {
+    updateMessages = (newMsgObj) => {
         let temp = this.state.messages;
         let obj = {
-            id:  id.split(':')[1],
-            msg: msg
+            id:  newMsgObj.id,
+            msg: newMsgObj.msg
         };
-
         temp.push(obj);
-
         this.setState({messages: temp});
     };
 

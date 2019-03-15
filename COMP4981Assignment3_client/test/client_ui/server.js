@@ -18,10 +18,9 @@ app.use(index);
 let server_ip = '';
 let server_port = '';
 let subProcess;
-let start = false;
 
 io.on("connection", socket => {
-    socket.on("FromClient", data => {
+    socket.on("sendClientInfo", data => {
         let info = data.split(' ');
         server_ip = info[0];
         server_port = info[1];
@@ -29,19 +28,11 @@ io.on("connection", socket => {
           [server_ip, server_port]);
     });
 
-    socket.on("sendInit", data => {
+    socket.on("sendUpdates", () => {
         subProcess.stdout.on("data", data => {
-            let inArr = data.toString().split("\n");
-            console.log(inArr);
-            socket.emit("receiveInit", inArr);
-        });
-    });
-
-    socket.on("sendUpdates", data => {
-        subProcess.stdout.on("data", data => {
-            console.log("sendUpdates");
-            let inArr = data.toString().split("\n");
-            socket.emit("receiveUpdates", inArr);
+            let stdout = data.toString().split("\n");
+            console.log(stdout);
+            socket.emit("receiveUpdates", stdout);
         });
     });
 });
