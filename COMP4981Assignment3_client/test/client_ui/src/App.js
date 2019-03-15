@@ -21,10 +21,10 @@ class App extends Component {
     };
 
     render() {
-        if (this.state.didReceiveInfo)
+        // if (this.state.didReceiveInfo)
             return (<Stage ipAddress={this.state.ipAddress} portNumber={this.state.portNumber}/>);
-        else
-            return (< Landing setServerInfo={this.setServerInfo}/>);
+        // else
+        //     return (< Landing setServerInfo={this.setServerInfo}/>);
     }
 }
 

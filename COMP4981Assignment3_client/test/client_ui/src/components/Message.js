@@ -49,8 +49,9 @@ const styles = theme => ({
         padding:  10
     },
     paper:   {
-        height: 'fit-content',
-        width:  '100%',
+        height:  'fit-content',
+        width:   '100%',
+        padding: 10
     },
     control: {
         padding: theme.spacing.unit * 2,

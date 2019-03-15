@@ -1,11 +1,23 @@
 import React, {Component} from "react";
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 import Message from './Message';
 import InputBox from './InputBox';
-import {withStyles} from '@material-ui/core/styles';
-import PropTypes from 'prop-types';
 import socketIOClient from "socket.io-client";
+
+import PropTypes from 'prop-types';
+import AppBar from '@material-ui/core/AppBar';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import Divider from '@material-ui/core/Divider';
+import Drawer from '@material-ui/core/Drawer';
+import Hidden from '@material-ui/core/Hidden';
+import IconButton from '@material-ui/core/IconButton';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import {withStyles} from '@material-ui/core/styles';
 
 class Stage extends Component {
     constructor(props) {
@@ -83,14 +95,11 @@ class Stage extends Component {
     };
 
     renderClientList = () => {
-        const {classes} = this.props;
         return this.state.clients.map((e, i) => {
             return (
-              <Grid key={i} item xs={12}>
-                  <Paper className={classes.userList}>
-                      User {e.id}: {e.ip}
-                  </Paper>
-              </Grid>
+              <ListItem button key={i}>
+                  <ListItemText primary={`User ${e.id} : ${e.ip}`}/>
+              </ListItem>
             );
         });
     };
@@ -121,63 +130,131 @@ class Stage extends Component {
     };
 
     render() {
-        const {classes} = this.props;
+        const {classes, theme} = this.props;
+
+        const drawer = (
+          <div>
+              <div className={classes.toolbar}/>
+              <ListItem alignItems={"center"}>
+                  <ListItemText>
+                      <div style={{textAlign: 'center'}}>Client List</div>
+                  </ListItemText>
+              </ListItem>
+              <Divider/>
+              <List>
+                  {
+                      this.renderClientList()
+                  }
+              </List>
+          </div>
+        );
 
         return (
-          <Grid container className={classes.root} spacing={16}>
-              <Grid item xs={12}>
-                  <Paper className={classes.heading}>
-                      <h1>Daniel's Chat Service</h1>
-                  </Paper>
-              </Grid>
-              <Grid item xs={3}>
-                  <Paper className={classes.userListPaper}>
-                      <Grid container className={classes.root} spacing={16}>
-                          {this.renderClientList()}
+          <div className={classes.root}>
+              <CssBaseline/>
+              <AppBar position="fixed" className={classes.appBar}>
+                  <Toolbar>
+                      <IconButton
+                        color="inherit"
+                        aria-label="Open drawer"
+                        onClick={this.handleDrawerToggle}
+                        className={classes.menuButton}
+                      >
+                      </IconButton>
+                      <Typography variant="h6" color="inherit" noWrap>
+                          Daniel's Chat Service
+                      </Typography>
+                  </Toolbar>
+              </AppBar>
+              <nav className={classes.drawer}>
+                  <Hidden smUp implementation="css">
+                      <Drawer
+                        container={this.props.container}
+                        variant="temporary"
+                        anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+                        open={this.state.mobileOpen}
+                        onClose={this.handleDrawerToggle}
+                        classes={{
+                            paper: classes.drawerPaper,
+                        }}
+                      >
+                          {drawer}
+                      </Drawer>
+                  </Hidden>
+                  <Hidden xsDown implementation="css">
+                      <Drawer
+                        classes={{
+                            paper: classes.drawerPaper,
+                        }}
+                        variant="permanent"
+                        open
+                      >
+                          {drawer}
+                      </Drawer>
+                  </Hidden>
+              </nav>
+              <main className={classes.content}>
+                  <div className={classes.toolbar}/>
+                  <Grid container className={classes.root} spacing={16}>
+                      <Grid item xs={9}>
+                          {this.state.messages.length !== 0 ? this.renderMessages() :
+                            <Message updateMessages={this.updateMessages}
+                                     updateUsers={this.updateUsers}
+                                     message={`SYSTEM: Welcome!`}/>}
                       </Grid>
-                  </Paper>
-              </Grid>
-              <Grid item xs={9}>
-                  {this.state.messages.length !== 0 ? this.renderMessages() :
-                    <Message updateMessages={this.updateMessages}
-                             updateUsers={this.updateUsers}
-                             message={`SYSTEM: Welcome!`}/>}
-                  <Grid item xs={12}>
-                      <InputBox/>
+                      <Grid item xs={12}>
+                          <InputBox/>
+                      </Grid>
                   </Grid>
-              </Grid>
-          </Grid>
+              </main>
+          </div>
         );
     }
 }
 
+const drawerWidth = 240;
+
 const styles = theme => ({
-    root:          {
-        flexGrow: 1,
-        padding:  '10px'
+    root:        {
+        display: 'flex',
     },
-    paper:         {
+    drawer:      {
+        [theme.breakpoints.up('sm')]: {
+            width:      drawerWidth,
+            flexShrink: 0,
+        },
+    },
+    appBar:      {
+        marginLeft:                   drawerWidth,
+        [theme.breakpoints.up('sm')]: {
+            width: `calc(100% - ${drawerWidth}px)`,
+        },
+    },
+    menuButton:  {
+        marginRight:                  20,
+        [theme.breakpoints.up('sm')]: {
+            display: 'none',
+        },
+    },
+    toolbar:     theme.mixins.toolbar,
+    drawerPaper: {
+        width: drawerWidth,
+    },
+    content:     {
+        flexGrow:        1,
+        padding:         theme.spacing.unit * 3,
+        backgroundColor: '#FAFAFA',
+    },
+    paper:       {
         height: '90%',
         width:  '90%'
-    },
-    userListPaper: {
-        height: '90%',
-        width:  '90%'
-    },
-    userList:      {
-        height: 50,
-        width:  '90%'
-    },
-    heading:       {
-        textAlign: 'center'
-    },
-    control:       {
-        padding: theme.spacing.unit * 2,
     },
 });
 
 Stage.propTypes = {
-    classes: PropTypes.object.isRequired,
+    classes:   PropTypes.object.isRequired,
+    container: PropTypes.object,
+    theme:     PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Stage);
+export default withStyles(styles, {withTheme: true})(Stage);
