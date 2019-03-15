@@ -12,14 +12,54 @@ class Stage extends Component {
         this.state = {
             ipAddress:  this.props.ipAddress,
             portNumber: this.props.portNumber,
+            message:    false,
             spacing:    '16',
-            endpoint:   "http://127.0.0.1:4001"
+            endpoint:   "http://127.0.0.1:4001",
+            clients:    []
         };
 
         const {endpoint} = this.state;
         const socket = socketIOClient(endpoint);
         socket.emit('FromClient', this.state.ipAddress + ' ' + this.state.portNumber);
     }
+
+    componentDidMount() {
+        const {endpoint} = this.state;
+        const socket = socketIOClient(endpoint);
+        socket.on("updates", data => this.setState({message: data},
+          () => {
+              console.log(this.state.message);
+              this.updateUsers(data[1]);
+          }
+        ));
+    }
+
+    updateUsers = (newClientID) => {
+        let temp = this.state.clients;
+        let exists = false;
+
+        for (let i = 0; i < temp.length; i++) {
+            if (temp[i] == newClientID) exists = true;
+        }
+
+        if (!exists) {
+            temp.push(newClientID);
+            this.setState({clients: temp}, () => console.log(this.state.clients));
+        }
+    };
+
+    renderClientList = () => {
+        const {classes} = this.props;
+        return this.state.clients.map((e, i) => {
+            return (
+              <Grid key={i} item xs={12}>
+                  <Paper className={classes.userList}>
+                      {e}
+                  </Paper>
+              </Grid>
+            );
+        });
+    };
 
     render() {
         const {classes} = this.props;
@@ -33,11 +73,15 @@ class Stage extends Component {
               </Grid>
               <Grid item xs={3}>
                   <Paper className={classes.paper}>
+                      <Grid container className={classes.root} spacing={16}>
+                          {this.renderClientList()}
+                      </Grid>
                   </Paper>
               </Grid>
               <Grid item xs={9}>
                   <Paper className={classes.paper}>
-                      <Message ipAddress={this.state.ipAddress} portNumber={this.state.portNumber}/>
+                      <Message updateUsers={this.updateUsers} ipAddress={this.state.ipAddress}
+                               portNumber={this.state.portNumber}/>
                   </Paper>
               </Grid>
           </Grid>
@@ -46,18 +90,22 @@ class Stage extends Component {
 }
 
 const styles = theme => ({
-    root:    {
+    root:     {
         flexGrow: 1,
         padding:  '10px'
     },
-    paper:   {
+    paper:    {
         height: 800,
         width:  '90%'
     },
-    heading: {
+    userList: {
+        height: 50,
+        width:  '90%'
+    },
+    heading:  {
         textAlign: 'center'
     },
-    control: {
+    control:  {
         padding: theme.spacing.unit * 2,
     },
 });

@@ -26,9 +26,19 @@ class Message extends Component {
         const {endpoint} = this.state;
         const socket = socketIOClient(endpoint);
         socket.emit('sendInit', ' ');
-        socket.on("receiveInit", data => this.setState({message: data},
-          () => console.log(this.state.message)
+        socket.on("updates", data => this.setState({message: data},
+          () => {
+              if (data.length === 4)
+                  this.sendInfoUpForUpdate(data[2]);
+              if (data.length === 5)
+                  this.sendInfoUpForUpdate(data[0]);
+              console.log(this.state.message);
+          }
         ));
+    };
+
+    sendInfoUpForUpdate = (newID) => {
+        this.props.updateUsers(newID);
     };
 
     render() {
@@ -57,7 +67,7 @@ class Message extends Component {
                   </Grid>
               </Grid>
             );
-    }//TODO: make client input the port and ip
+    }
 }
 
 const styles = theme => ({

@@ -112,7 +112,7 @@ int main() {
                         if ( ( sockfd = client[ i ] ) < 0 || sockfd == currentSockfd ) continue;
 
                         char tempSendCombine[BUFLEN];
-                        sprintf( tempSendCombine, "new_cid:%d new_cip:%s %s", currentIndex, client_address_arr[ currentIndex ],
+                        sprintf( tempSendCombine, "new_cid:%d\nnew_cip:%s\n%s", currentIndex, client_address_arr[ currentIndex ],
                                  buf );
                         write( sockfd, tempSendCombine, BUFLEN );
                     }

@@ -30,12 +30,11 @@ int main( int argc, const char* argv[] ) {
 
     pthread_create( &pthread, nullptr, client_receive, nullptr );
 
-    printf( "s_ip %s\n", hp->h_name );
-    printf( "s_port %d\n", port );
-    fflush( stdout );
-
     pptr = hp->h_addr_list;
+
     printf( "s_ip: %s\n", inet_ntop( hp->h_addrtype, *pptr, str, sizeof( str ) ) );
+    printf( "s_port %d\n", port );
+
     fflush( stdout );
 
     while ( true ) {

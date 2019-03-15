@@ -32,16 +32,16 @@ io.on("connection", socket => {
     socket.on("sendInit", data => {
         subProcess.stdout.on("data", data => {
             let inArr = data.toString().split("\n");
-            socket.emit("receiveInit", inArr);
+            socket.emit("updates", inArr);
         });
         start = true;
     });
 
-    if (start)
-        subProcess.stdout.on("data", data => {
-            let inArr = data.toString().split("\n");
-            socket.emit("receiveInit", inArr);
-        });
+    // if (start)
+    //     subProcess.stdout.on("data", data => {
+    //         let inArr = data.toString().split("\n");
+    //         socket.emit("updates", inArr);
+    //     });
 });
 
 server.listen(port, () => console.log(`Listening on port ${port}`));
