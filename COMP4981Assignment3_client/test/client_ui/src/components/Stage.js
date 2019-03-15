@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Message from './Message';
+import InputBox from './InputBox';
 import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 import socketIOClient from "socket.io-client";
@@ -130,19 +131,20 @@ class Stage extends Component {
                   </Paper>
               </Grid>
               <Grid item xs={3}>
-                  <Paper className={classes.paper}>
+                  <Paper className={classes.userListPaper}>
                       <Grid container className={classes.root} spacing={16}>
                           {this.renderClientList()}
                       </Grid>
                   </Paper>
               </Grid>
               <Grid item xs={9}>
-                  <Paper className={classes.paper}>
-                      {this.state.messages.length !== 0 ? this.renderMessages() :
-                        <Message updateMessages={this.updateMessages}
-                                 updateUsers={this.updateUsers}
-                                 message={`Welcome!`}/>}
-                  </Paper>
+                  {this.state.messages.length !== 0 ? this.renderMessages() :
+                    <Message updateMessages={this.updateMessages}
+                             updateUsers={this.updateUsers}
+                             message={`SYSTEM: Welcome!`}/>}
+                  <Grid item xs={12}>
+                      <InputBox/>
+                  </Grid>
               </Grid>
           </Grid>
         );
@@ -150,22 +152,26 @@ class Stage extends Component {
 }
 
 const styles = theme => ({
-    root:     {
+    root:          {
         flexGrow: 1,
         padding:  '10px'
     },
-    paper:    {
-        height: 800,
+    paper:         {
+        height: '90%',
         width:  '90%'
     },
-    userList: {
+    userListPaper: {
+        height: '90%',
+        width:  '90%'
+    },
+    userList:      {
         height: 50,
         width:  '90%'
     },
-    heading:  {
+    heading:       {
         textAlign: 'center'
     },
-    control:  {
+    control:       {
         padding: theme.spacing.unit * 2,
     },
 });

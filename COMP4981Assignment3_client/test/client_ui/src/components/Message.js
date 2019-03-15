@@ -49,7 +49,7 @@ const styles = theme => ({
         padding:  10
     },
     paper:   {
-        height: 100,
+        height: 'fit-content',
         width:  '100%',
     },
     control: {
