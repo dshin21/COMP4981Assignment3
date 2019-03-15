@@ -29,9 +29,9 @@ class Message extends Component {
         socket.on("updates", data => this.setState({message: data},
           () => {
               if (data.length === 4)
-                  this.sendInfoUpForUpdate(data[2]);
+                  this.sendInfoUpForUpdate([data[2], data[0]]);
               if (data.length === 5)
-                  this.sendInfoUpForUpdate(data[0]);
+                  this.sendInfoUpForUpdate([data[0],data[1]]);
               console.log(this.state.message);
           }
         ));

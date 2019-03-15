@@ -15,7 +15,8 @@ class Stage extends Component {
             message:    false,
             spacing:    '16',
             endpoint:   "http://127.0.0.1:4001",
-            clients:    []
+            clients:    [],
+            myID:       false
         };
 
         const {endpoint} = this.state;
@@ -23,28 +24,24 @@ class Stage extends Component {
         socket.emit('FromClient', this.state.ipAddress + ' ' + this.state.portNumber);
     }
 
-    componentDidMount() {
-        const {endpoint} = this.state;
-        const socket = socketIOClient(endpoint);
-        socket.on("updates", data => this.setState({message: data},
-          () => {
-              console.log(this.state.message);
-              this.updateUsers(data[1]);
-          }
-        ));
-    }
-
     updateUsers = (newClientID) => {
         let temp = this.state.clients;
         let exists = false;
 
         for (let i = 0; i < temp.length; i++) {
-            if (temp[i] == newClientID) exists = true;
+            if (temp[i].id == newClientID) exists = true;
         }
 
         if (!exists) {
-            temp.push(newClientID);
-            this.setState({clients: temp}, () => console.log(this.state.clients));
+            let obj = {
+                id: newClientID[0].split(':')[1],
+                ip: newClientID[1].split(':')[1]
+            };
+            temp.push(obj);
+            this.setState({clients: temp}, () => {
+                if (this.state.myID === false)
+                    this.setState({myId: this.state.clients.id}, () => console.log(this.state.myId));
+            });
         }
     };
 
@@ -54,7 +51,7 @@ class Stage extends Component {
             return (
               <Grid key={i} item xs={12}>
                   <Paper className={classes.userList}>
-                      {e}
+                      User {e.id}: {e.ip}
                   </Paper>
               </Grid>
             );

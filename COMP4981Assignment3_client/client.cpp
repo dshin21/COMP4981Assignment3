@@ -32,8 +32,8 @@ int main( int argc, const char* argv[] ) {
 
     pptr = hp->h_addr_list;
 
-    printf( "s_ip: %s\n", inet_ntop( hp->h_addrtype, *pptr, str, sizeof( str ) ) );
-    printf( "s_port %d\n", port );
+    printf( "s_ip:%s\n", inet_ntop( hp->h_addrtype, *pptr, str, sizeof( str ) ) );
+    printf( "s_port:%d\n", port );
 
     fflush( stdout );
 

@@ -36,12 +36,6 @@ io.on("connection", socket => {
         });
         start = true;
     });
-
-    // if (start)
-    //     subProcess.stdout.on("data", data => {
-    //         let inArr = data.toString().split("\n");
-    //         socket.emit("updates", inArr);
-    //     });
 });
 
 server.listen(port, () => console.log(`Listening on port ${port}`));
