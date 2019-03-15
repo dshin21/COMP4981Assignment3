@@ -67,7 +67,7 @@ int main() {
 
                     //send new client its id
                     char s_buf[BUFLEN];
-                    sprintf( s_buf, "CID:%d", i );
+                    sprintf( s_buf, "cid:%d", i );
                     write( new_sd, s_buf, BUFLEN );
 
                     break;
@@ -112,7 +112,7 @@ int main() {
                         if ( ( sockfd = client[ i ] ) < 0 || sockfd == currentSockfd ) continue;
 
                         char tempSendCombine[BUFLEN];
-                        sprintf( tempSendCombine, "ID:%d IP:%s %s", currentIndex, client_address_arr[ currentIndex ],
+                        sprintf( tempSendCombine, "new_cid:%d new_cip:%s %s", currentIndex, client_address_arr[ currentIndex ],
                                  buf );
                         write( sockfd, tempSendCombine, BUFLEN );
                     }

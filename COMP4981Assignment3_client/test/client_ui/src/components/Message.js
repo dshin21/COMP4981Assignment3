@@ -9,11 +9,16 @@ class Message extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isMyMsg:  this.props.isMyMsg,
-            message: false,
-            endpoint: "http://127.0.0.1:4001",
-            clientID: false //TODO: if the received msg == clientID, send isMyMsg=true
+            ipAddress:  this.props.ipAddress,
+            portNumber: this.props.portNumber,
+            isMyMsg:    this.props.isMyMsg,
+            message:    false,
+            endpoint:   "http://127.0.0.1:4001",
+            clientID:   false //TODO: if the received msg == clientID, send isMyMsg=true
         };
+        const {endpoint} = this.state;
+        const socket = socketIOClient(endpoint);
+        socket.emit('FromClient', this.state.ipAddress + ' ' + this.state.portNumber);
     }
 
     componentDidMount() {
@@ -28,7 +33,7 @@ class Message extends Component {
         const {classes} = this.props;
         if (this.state.isMyMsg)
             return (
-              <Grid container className={classes.root} spacing={12}>
+              <Grid container className={classes.root} spacing={16}>
                   <Grid item xs={6}>
                   </Grid>
                   <Grid item xs={6}>
@@ -40,7 +45,7 @@ class Message extends Component {
             );
         else
             return (
-              <Grid container className={classes.root} spacing={12}>
+              <Grid container className={classes.root} spacing={16}>
                   <Grid item xs={6}>
                       <Paper className={classes.paper}>
                           {this.state.message}

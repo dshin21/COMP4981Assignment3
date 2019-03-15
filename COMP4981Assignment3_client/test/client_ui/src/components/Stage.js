@@ -9,6 +9,8 @@ class Stage extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            ipAddress:      this.props.ipAddress,
+            portNumber:     this.props.portNumber,
             spacing: '16'
         };
     }
@@ -17,7 +19,7 @@ class Stage extends Component {
         const {classes} = this.props;
 
         return (
-          <Grid container className={classes.root} spacing={12}>
+          <Grid container className={classes.root} spacing={16}>
               <Grid item xs={12}>
                   <Paper className={classes.heading}>
                       <h1>Daniel's Chat Service</h1>
@@ -29,8 +31,7 @@ class Stage extends Component {
               </Grid>
               <Grid item xs={9}>
                   <Paper className={classes.paper}>
-                      <Message/>
-                      <Message/>
+                      <Message ipAddress={this.state.ipAddress} portNumber={this.state.portNumber}/>
                   </Paper>
               </Grid>
           </Grid>

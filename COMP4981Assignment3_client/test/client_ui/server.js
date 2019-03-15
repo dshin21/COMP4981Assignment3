@@ -1,6 +1,5 @@
 const fs = require("fs"); //save file
 const child_process = require("child_process");
-const subProcess = child_process.spawn("../../cmake-build-debug/COMP4981Assignment3_client", [""]);
 
 const express = require("express");
 const http = require("http");
@@ -16,11 +15,24 @@ const port = process.env.PORT || 4001;
 
 app.use(index);
 
+let didReceiveInfo = false;
+let server_ip = '';
+let server_port = '';
+let subProcess;
+
 io.on("connection", socket => {
-    subProcess.stdout.on("data", data => {
-        let inArr = data.toString().split("\n");
-        socket.emit("FromServer", inArr);
-        console.log(inArr);
+    socket.on("FromClient", data => {
+        let info = data.split(' ');
+        server_ip = info[0];
+        server_port = info[1];
+        didReceiveInfo = true;
+        subProcess = child_process.spawn("../../cmake-build-debug/COMP4981Assignment3_client",
+          [server_ip, server_port]);
+        subProcess.stdout.on("data", data => {
+            let inArr = data.toString().split("\n");
+            socket.emit("FromServer", inArr);
+            console.log(inArr);
+        });
     });
 });
 

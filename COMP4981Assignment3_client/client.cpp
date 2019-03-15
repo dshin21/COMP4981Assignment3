@@ -1,10 +1,10 @@
 #include "client.h"
 
-int main() {
+int main( int argc, const char* argv[] ) {
     pthread_t pthread;
 
-    port = SERVER_TCP_PORT;
-    host = (char*) "127.0.0.1";
+    host = (char*) argv[ 1 ];
+    port = atoi( argv[ 2 ] );
 
     if ( ( sd = socket( AF_INET, SOCK_STREAM, 0 ) ) == -1 ) {
         perror( "Cannot create socket" );
@@ -30,15 +30,15 @@ int main() {
 
     pthread_create( &pthread, nullptr, client_receive, nullptr );
 
-    printf( "Connected:\nServer Name: %s\n", hp->h_name );
+    printf( "s_ip %s\n", hp->h_name );
+    printf( "s_port %d\n", port );
     fflush( stdout );
 
     pptr = hp->h_addr_list;
-    printf( "IP Address: %s\n", inet_ntop( hp->h_addrtype, *pptr, str, sizeof( str ) ) );
+    printf( "s_ip: %s\n", inet_ntop( hp->h_addrtype, *pptr, str, sizeof( str ) ) );
     fflush( stdout );
 
     while ( true ) {
-        printf( "\nTransmit:\n" );
         fflush( stdout );
 
         fgets( sbuf, BUFLEN, stdin );
