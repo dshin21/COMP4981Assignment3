@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
+import Message from './Message';
 import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 
@@ -17,11 +18,20 @@ class Stage extends Component {
 
         return (
           <Grid container className={classes.root} spacing={12}>
+              <Grid item xs={12}>
+                  <Paper className={classes.heading}>
+                      <h1>Daniel's Chat Service</h1>
+                  </Paper>
+              </Grid>
               <Grid item xs={3}>
-                  <Paper className={classes.paper}/>
+                  <Paper className={classes.paper}>
+                  </Paper>
               </Grid>
               <Grid item xs={9}>
-                  <Paper className={classes.paper}/>
+                  <Paper className={classes.paper}>
+                      <Message isMyMsg={true}/>
+                      <Message isMyMsg={false}/>
+                  </Paper>
               </Grid>
           </Grid>
         );
@@ -35,7 +45,10 @@ const styles = theme => ({
     },
     paper:   {
         height: 800,
-        width:  '90%',
+        width:  '90%'
+    },
+    heading: {
+        textAlign: 'center'
     },
     control: {
         padding: theme.spacing.unit * 2,
