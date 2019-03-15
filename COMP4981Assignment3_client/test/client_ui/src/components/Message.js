@@ -3,14 +3,25 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import socketIOClient from "socket.io-client";
 
 class Message extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isMyMsg: this.props.isMyMsg,
-            message: this.props.message
+            isMyMsg:  this.props.isMyMsg,
+            message: false,
+            endpoint: "http://127.0.0.1:4001",
+            clientID: false //TODO: if the received msg == clientID, send isMyMsg=true
         };
+    }
+
+    componentDidMount() {
+        const {endpoint} = this.state;
+        const socket = socketIOClient(endpoint);
+        socket.on("FromServer", data => this.setState({message: data},
+          () => console.log(this.state.message)
+        ));
     }
 
     render() {
@@ -22,7 +33,7 @@ class Message extends Component {
                   </Grid>
                   <Grid item xs={6}>
                       <Paper className={classes.paper}>
-                          {this.state.message[0]}
+                          {this.state.message}
                       </Paper>
                   </Grid>
               </Grid>
@@ -32,7 +43,7 @@ class Message extends Component {
               <Grid container className={classes.root} spacing={12}>
                   <Grid item xs={6}>
                       <Paper className={classes.paper}>
-                          {this.state.message[0]}
+                          {this.state.message}
                       </Paper>
                   </Grid>
                   <Grid item xs={6}>
