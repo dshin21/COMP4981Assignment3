@@ -10,13 +10,15 @@ class Stage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            ipAddress:  this.props.ipAddress,
-            portNumber: this.props.portNumber,
-            message:    false,
-            spacing:    '16',
-            endpoint:   "http://127.0.0.1:4001",
-            clients:    [],
-            myID:       false
+            ipAddress:   this.props.ipAddress,
+            portNumber:  this.props.portNumber,
+            message:     false,
+            spacing:     '16',
+            endpoint:    "http://127.0.0.1:4001",
+            clients:     [],
+            messages:    [],
+            messageList: [],
+            myID:        false
         };
 
         const {endpoint} = this.state;
@@ -29,7 +31,7 @@ class Stage extends Component {
         let exists = false;
 
         for (let i = 0; i < temp.length; i++) {
-            if (temp[i].id == newClientID) exists = true;
+            if (temp[i].id == newClientID[0].split(':')[1]) exists = true;
         }
 
         if (!exists) {
@@ -40,7 +42,9 @@ class Stage extends Component {
             temp.push(obj);
             this.setState({clients: temp}, () => {
                 if (this.state.myID === false)
-                    this.setState({myId: this.state.clients.id}, () => console.log(this.state.myId));
+                    this.setState({myId: this.state.clients[0].id}
+                      // , () => console.log(this.state.myId)
+                    );
             });
         }
     };
@@ -55,6 +59,35 @@ class Stage extends Component {
                   </Paper>
               </Grid>
             );
+        });
+    };
+
+    updateMessages = (id, msg) => {
+        let temp = this.state.messages;
+        console.log(this.state.messages);
+        let obj = {
+            id:  id.split(':')[1],
+            msg: msg
+        };
+
+        temp.push(obj);
+
+        this.setState({messages: temp});
+
+        let tempMsgList = this.state.messageList;
+        tempMsgList.push(<Message key={this.state.messages.length}
+                                  updateMessages={this.updateMessages}
+                                  updateUsers={this.updateUsers}
+                                  isMyMsg={obj.id === this.state.myID}
+                                  message={obj.msg}/>);
+        this.setState({messageList: tempMsgList});
+    };
+
+    renderMessages = () => {
+        return this.state.messageList.map((e) => {
+            {
+                return (e);
+            }
         });
     };
 
@@ -77,8 +110,10 @@ class Stage extends Component {
               </Grid>
               <Grid item xs={9}>
                   <Paper className={classes.paper}>
-                      <Message updateUsers={this.updateUsers} ipAddress={this.state.ipAddress}
-                               portNumber={this.state.portNumber}/>
+                      {this.state.messages.length !== 0 ? this.renderMessages() :
+                        <Message updateMessages={this.updateMessages}
+                                 updateUsers={this.updateUsers}
+                                 myID={99}/>}
                   </Paper>
               </Grid>
           </Grid>

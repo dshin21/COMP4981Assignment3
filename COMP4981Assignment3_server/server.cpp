@@ -69,7 +69,7 @@ int main() {
                     char s_buf[BUFLEN];
                     sprintf( s_buf, "cid:%d", i );
                     write( new_sd, s_buf, BUFLEN );
-
+                    fflush( stdout );
                     break;
                 }
             }
@@ -115,6 +115,7 @@ int main() {
                         sprintf( tempSendCombine, "new_cid:%d\nnew_cip:%s\n%s", currentIndex, client_address_arr[ currentIndex ],
                                  buf );
                         write( sockfd, tempSendCombine, BUFLEN );
+                        fflush( stdout );
                     }
                 }
                 if ( --nready <= 0 ) break;

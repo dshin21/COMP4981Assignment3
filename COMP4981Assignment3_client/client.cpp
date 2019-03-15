@@ -34,7 +34,6 @@ int main( int argc, const char* argv[] ) {
 
     printf( "s_ip:%s\n", inet_ntop( hp->h_addrtype, *pptr, str, sizeof( str ) ) );
     printf( "s_port:%d\n", port );
-
     fflush( stdout );
 
     while ( true ) {
@@ -53,6 +52,7 @@ int main( int argc, const char* argv[] ) {
 
 void* client_receive( void* ptr ) {
     while ( true ) {
+        fflush( stdout );
         int n = 0;
         bp = rbuf;
         bytes_to_read = BUFLEN;

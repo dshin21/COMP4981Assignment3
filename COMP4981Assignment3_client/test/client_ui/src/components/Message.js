@@ -9,12 +9,10 @@ class Message extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            ipAddress:  this.props.ipAddress,
-            portNumber: this.props.portNumber,
-            isMyMsg:    this.props.isMyMsg,
-            message:    false,
-            endpoint:   "http://127.0.0.1:4001",
-            clientID:   false //TODO: if the received msg == clientID, send isMyMsg=true
+            isMyMsg:  this.props.isMyMsg,
+            message:  this.props.message,
+            endpoint: "http://127.0.0.1:4001",
+            clientID: false //TODO: if the received msg == clientID, send isMyMsg=true
         };
     }
 
@@ -26,13 +24,13 @@ class Message extends Component {
         const {endpoint} = this.state;
         const socket = socketIOClient(endpoint);
         socket.emit('sendInit', ' ');
-        socket.on("updates", data => this.setState({message: data},
+        socket.on("receiveInit", data => this.setState({message: data},
           () => {
               if (data.length === 4)
                   this.sendInfoUpForUpdate([data[2], data[0]]);
-              if (data.length === 5)
-                  this.sendInfoUpForUpdate([data[0],data[1]]);
-              console.log(this.state.message);
+              if (data.length === 5) {
+                  this.sendInfoUpForUpdate([data[0], data[1]]);
+              }
           }
         ));
     };
@@ -60,7 +58,7 @@ class Message extends Component {
               <Grid container className={classes.root} spacing={16}>
                   <Grid item xs={6}>
                       <Paper className={classes.paper}>
-                          {this.state.message}
+                          {this.state.myID == 99 ? '' : this.state.message}
                       </Paper>
                   </Grid>
                   <Grid item xs={6}>
