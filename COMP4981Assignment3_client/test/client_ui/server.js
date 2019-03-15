@@ -31,9 +31,15 @@ io.on("connection", socket => {
     socket.on("sendUpdates", () => {
         subProcess.stdout.on("data", data => {
             let stdout = data.toString().split("\n");
-            console.log(stdout);
+            console.log("sendUpdates:" + stdout);
             socket.emit("receiveUpdates", stdout);
         });
+    });
+
+    socket.on("sendMyMsg", (data) => {
+        console.log("sendMyMsg:" + data);
+
+        subProcess.stdin.write(data + '\n');
     });
 });
 

@@ -91,7 +91,6 @@ class Stage extends Component {
 
             tempClients.push(obj);
             this.setState({clients: tempClients}, () => {
-                // if (this.state.myID === false)
                 this.setState({myId: this.state.clients[0].id});
             });
         }
@@ -117,12 +116,11 @@ class Stage extends Component {
             msg: newMsgObj.msg
         };
         temp.push(obj);
-        this.setState({messages: temp}, () => console.log(this.state.messages));
+        this.setState({messages: temp});
     };
 
     renderMessages = () => {
         if (this.state.messages.length !== 0) {
-            console.log(this.state.messages);
             return this.state.messages.map((e, i) => {
                 {
                     return (
@@ -143,6 +141,9 @@ class Stage extends Component {
             id:  this.state.clients[0].id,
             msg: msg.msg
         });
+        const socket = socketIOClient(this.state.endpoint);
+        // let tosend = [`new_cid:${this.state.clients[0].id}`, `new_cip:${this.state.ipAddress}`, msg.msg];
+        socket.emit('sendMyMsg', msg.msg);
     };
 
     render() {
