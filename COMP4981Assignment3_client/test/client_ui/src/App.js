@@ -12,10 +12,10 @@ class App extends Component {
 
     componentDidMount() {
         const {endpoint} = this.state;
-        const socket = socketIOClient(endpoint);
-        socket.on("FromServer", data => this.setState({response: data},
-          () => console.log(this.state.response)
-        ));
+        // const socket = socketIOClient(endpoint);
+        // socket.on("FromServer", data => this.setState({response: data},
+        //   () => console.log(this.state.response)
+        // ));
     }
 
     render() {
