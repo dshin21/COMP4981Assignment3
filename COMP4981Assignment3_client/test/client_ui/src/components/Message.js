@@ -8,7 +8,8 @@ class Message extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isMyMsg: this.props.isMyMsg
+            isMyMsg: this.props.isMyMsg,
+            message: this.props.message
         };
     }
 
@@ -20,7 +21,9 @@ class Message extends Component {
                   <Grid item xs={6}>
                   </Grid>
                   <Grid item xs={6}>
-                      <Paper className={classes.paper}/>
+                      <Paper className={classes.paper}>
+                          {this.state.message[0]}
+                      </Paper>
                   </Grid>
               </Grid>
             );
@@ -28,7 +31,9 @@ class Message extends Component {
             return (
               <Grid container className={classes.root} spacing={12}>
                   <Grid item xs={6}>
-                      <Paper className={classes.paper}/>
+                      <Paper className={classes.paper}>
+                          {this.state.message[0]}
+                      </Paper>
                   </Grid>
                   <Grid item xs={6}>
                   </Grid>

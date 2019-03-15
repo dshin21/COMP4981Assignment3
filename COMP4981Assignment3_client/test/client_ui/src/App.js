@@ -7,21 +7,22 @@ class App extends Component {
         super(props);
         this.state = {
             response: false,
-            endpoint: "http://127.0.0.1:4001"
+            endpoint: "http://127.0.0.1:4001",
+            clientID: false //TODO: if the received msg == clientID, send isMyMsg=true
         };
     }
 
     componentDidMount() {
         const {endpoint} = this.state;
-        // const socket = socketIOClient(endpoint);
-        // socket.on("FromServer", data => this.setState({response: data},
-        //   () => console.log(this.state.response)
-        // ));
+        const socket = socketIOClient(endpoint);
+        socket.on("FromServer", data => this.setState({response: data},
+          () => console.log(this.state.response)
+        ));
     }
 
     render() {
         return (
-          <Stage/>
+          <Stage message={this.state.response}/>
         );
     }
 }

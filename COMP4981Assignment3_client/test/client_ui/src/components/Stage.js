@@ -9,7 +9,8 @@ class Stage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            spacing: '16'
+            spacing: '16',
+            message: this.props.message
         };
     }
 
@@ -29,8 +30,8 @@ class Stage extends Component {
               </Grid>
               <Grid item xs={9}>
                   <Paper className={classes.paper}>
-                      <Message isMyMsg={true}/>
-                      <Message isMyMsg={false}/>
+                      <Message isMyMsg={true} message={this.state.message}/>
+                      <Message isMyMsg={false} message={this.state.message}/>
                   </Paper>
               </Grid>
           </Grid>
