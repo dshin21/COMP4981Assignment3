@@ -106,7 +106,7 @@ int main() {
                         if ( ( sockfd = client[ i ] ) < 0 || sockfd == currentSockfd ) continue;
 
                         char tempSendCombine[BUFLEN];
-                        sprintf( tempSendCombine, "%d::::%s:::%s", currentIndex, client_address_arr[ currentIndex ],
+                        sprintf( tempSendCombine, "ID:%d IP:%s %s", currentIndex, client_address_arr[ currentIndex ],
                                  buf );
                         write( sockfd, tempSendCombine, BUFLEN );
                     }

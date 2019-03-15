@@ -9,7 +9,6 @@ char client_address_arr[FD_SETSIZE][20];
 int client[FD_SETSIZE];
 fd_set rset, allset;
 
-
 int enterServer();
 
 static void SystemFatal( const char* );

@@ -30,15 +30,15 @@ int main() {
 
     pthread_create( &pthread, nullptr, client_receive, nullptr );
 
-    printf( "Connected:    Server Name: %s\n", hp->h_name );
+    printf( "Connected:\nServer Name: %s\n", hp->h_name );
     fflush( stdout );
 
     pptr = hp->h_addr_list;
-    printf( "\t\tIP Address: %s\n", inet_ntop( hp->h_addrtype, *pptr, str, sizeof( str ) ) );
+    printf( "IP Address: %s\n", inet_ntop( hp->h_addrtype, *pptr, str, sizeof( str ) ) );
     fflush( stdout );
 
     while ( true ) {
-        printf( "Transmit:\n" );
+        printf( "\nTransmit:\n" );
         fflush( stdout );
 
         fgets( sbuf, BUFLEN, stdin );

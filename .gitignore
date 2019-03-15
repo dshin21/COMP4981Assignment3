@@ -2,3 +2,7 @@
 \.idea/
 
 cmake-build-debug/
+
+\.vscode/ipch/ca8247054fb0dbf2/
+
+\.vscode/ipch/e7c3b4fc2d8abc02/
