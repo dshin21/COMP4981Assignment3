@@ -13,7 +13,7 @@
 #include <unistd.h>
 #include <pthread.h>
 
-#define SERVER_TCP_PORT 7000 // Default port
+#define SERVER_TCP_PORT 7000
 #define BUFLEN 200
 
 int n, bytes_to_read;
@@ -23,8 +23,6 @@ struct sockaddr_in server;
 char* host, * bp, rbuf[BUFLEN], sbuf[BUFLEN], ** pptr;
 char str[16];
 
-int enterClient( char* hostName );
-
-void* myThreadFun( void* vargp );
+void* client_receive( void* ptr );
 
 #endif //COMP4981ASSIGNMENT3_CLIENT_CLIENT_HPP
