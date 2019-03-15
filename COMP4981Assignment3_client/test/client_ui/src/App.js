@@ -1,10 +1,10 @@
 import React, {Component} from "react";
-import Message from './components/Message'
+import Stage from './components/Stage';
 import socketIOClient from "socket.io-client";
 
 class App extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             response: false,
             endpoint: "http://127.0.0.1:4001"
@@ -20,15 +20,8 @@ class App extends Component {
     }
 
     render() {
-        const {response} = this.state;
         return (
-          <div style={{textAlign: "center"}}>
-              {response
-                ? <p>
-                    {response}
-                </p>
-                : <p>Loading...</p>}
-          </div>
+          <Stage/>
         );
     }
 }
