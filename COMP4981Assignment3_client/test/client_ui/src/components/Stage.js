@@ -4,15 +4,21 @@ import Paper from '@material-ui/core/Paper';
 import Message from './Message';
 import {withStyles} from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
+import socketIOClient from "socket.io-client";
 
 class Stage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            ipAddress:      this.props.ipAddress,
-            portNumber:     this.props.portNumber,
-            spacing: '16'
+            ipAddress:  this.props.ipAddress,
+            portNumber: this.props.portNumber,
+            spacing:    '16',
+            endpoint:   "http://127.0.0.1:4001"
         };
+
+        const {endpoint} = this.state;
+        const socket = socketIOClient(endpoint);
+        socket.emit('FromClient', this.state.ipAddress + ' ' + this.state.portNumber);
     }
 
     render() {

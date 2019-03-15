@@ -16,18 +16,20 @@ class Message extends Component {
             endpoint:   "http://127.0.0.1:4001",
             clientID:   false //TODO: if the received msg == clientID, send isMyMsg=true
         };
-        const {endpoint} = this.state;
-        const socket = socketIOClient(endpoint);
-        socket.emit('FromClient', this.state.ipAddress + ' ' + this.state.portNumber);
     }
 
     componentDidMount() {
+        this.getInitInfo();
+    }
+
+    getInitInfo = () => {
         const {endpoint} = this.state;
         const socket = socketIOClient(endpoint);
-        socket.on("FromServer", data => this.setState({message: data},
+        socket.emit('sendInit', ' ');
+        socket.on("receiveInit", data => this.setState({message: data},
           () => console.log(this.state.message)
         ));
-    }
+    };
 
     render() {
         const {classes} = this.props;
