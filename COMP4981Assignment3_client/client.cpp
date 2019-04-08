@@ -1,66 +1,99 @@
+/*---------------------------------------------------------------------------------------
+--	SOURCE FILE:		tcp_clnt.c - A simple TCP client program.
+--
+--	PROGRAM:		tclnt.exe
+--
+--	FUNCTIONS:		Berkeley Socket API
+--
+--	DATE:			February 2, 2008
+--
+--	REVISIONS:		(Date and Description)
+--				January 2005
+--				Modified the read loop to use fgets.
+--				While loop is based on the buffer length 
+--
+--
+--	DESIGNERS:		Aman Abdulla
+--
+--	PROGRAMMERS:		Aman Abdulla
+--
+--	NOTES:
+--	The program will establish a TCP connection to a user specifed server.
+-- The server can be specified using a fully qualified domain name or and
+--	IP address. After the connection has been established the user will be
+-- prompted for date. The date string is then sent to the server and the
+-- response (echo) back from the server is displayed.
+---------------------------------------------------------------------------------------*/
 #include "client.h"
 
-int main( int argc, const char* argv[] ) {
+int main(int argc, const char *argv[])
+{
     pthread_t pthread;
 
-    host = (char*) argv[ 1 ];
-    port = atoi( argv[ 2 ] );
+    host = (char *)argv[1];
+    port = atoi(argv[2]);
 
-    if ( ( sd = socket( AF_INET, SOCK_STREAM, 0 ) ) == -1 ) {
-        perror( "Cannot create socket" );
-        exit( 1 );
+    if ((sd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
+    {
+        perror("Cannot create socket");
+        exit(1);
     }
 
-    bzero( (char*) &server, sizeof( struct sockaddr_in ) );
+    bzero((char *)&server, sizeof(struct sockaddr_in));
     server.sin_family = AF_INET;
-    server.sin_port = htons( port );
+    server.sin_port = htons(port);
 
-    if ( ( hp = gethostbyname( host ) ) == NULL ) {
-        fprintf( stderr, "Unknown server address\n" );
-        exit( 1 );
+    if ((hp = gethostbyname(host)) == NULL)
+    {
+        fprintf(stderr, "Unknown server address\n");
+        exit(1);
     }
 
-    bcopy( hp->h_addr, (char*) &server.sin_addr, hp->h_length );
+    bcopy(hp->h_addr, (char *)&server.sin_addr, hp->h_length);
 
-    if ( connect( sd, (struct sockaddr*) &server, sizeof( server ) ) == -1 ) {
-        fprintf( stderr, "Can't connect to server\n" );
-        perror( "connect" );
-        exit( 1 );
+    if (connect(sd, (struct sockaddr *)&server, sizeof(server)) == -1)
+    {
+        fprintf(stderr, "Can't connect to server\n");
+        perror("connect");
+        exit(1);
     }
 
-    pthread_create( &pthread, nullptr, client_receive, nullptr );
+    pthread_create(&pthread, nullptr, client_receive, nullptr);
 
     pptr = hp->h_addr_list;
 
-    printf( "s_ip:%s\n", inet_ntop( hp->h_addrtype, *pptr, str, sizeof( str ) ) );
-    printf( "s_port:%d\n", port );
-    fflush( stdout );
+    printf("s_ip:%s\n", inet_ntop(hp->h_addrtype, *pptr, str, sizeof(str)));
+    printf("s_port:%d\n", port);
+    fflush(stdout);
 
-    while ( true ) {
-        fflush( stdout );
+    while (true)
+    {
+        fflush(stdout);
+        fgets(sbuf, BUFLEN, stdin);
+        send(sd, sbuf, BUFLEN, 0);
 
-        fgets( sbuf, BUFLEN, stdin );
-        send( sd, sbuf, BUFLEN, 0 );
-
-        if ( sbuf[ 0 ] == 'q' && sbuf[ 1 ] == 'u' && sbuf[ 2 ] == 'i' && sbuf[ 3 ] == 't' )
+        if (sbuf[0] == 'q' && sbuf[1] == 'u' && sbuf[2] == 'i' && sbuf[3] == 't')
             break;
     }
 
-    close( sd );
-    return ( 0 );
+    close(sd);
+    return (0);
 }
 
-void* client_receive( void* ptr ) {
-    while ( true ) {
-        fflush( stdout );
+void *client_receive(void *ptr)
+{
+    while (true)
+    {
+        fflush(stdout);
         int n = 0;
         bp = rbuf;
         bytes_to_read = BUFLEN;
-        while ( ( n = recv( sd, bp, bytes_to_read, 0 ) ) < BUFLEN ) {
+        while ((n = recv(sd, bp, bytes_to_read, 0)) < BUFLEN)
+        {
             bp += n;
             bytes_to_read -= n;
         }
-        printf( "%s\n", rbuf );
-        fflush( stdout );
+        printf("%s\n", rbuf);
+        fflush(stdout);
     }
 }

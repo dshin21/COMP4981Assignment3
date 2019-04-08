@@ -18,11 +18,11 @@
 
 int n, bytes_to_read;
 int sd, port;
-struct hostent* hp;
+struct hostent *hp;
 struct sockaddr_in server;
-char* host, * bp, rbuf[BUFLEN], sbuf[BUFLEN], ** pptr;
+char *host, *bp, rbuf[BUFLEN], sbuf[BUFLEN], **pptr;
 char str[16];
 
-void* client_receive( void* ptr );
+void *client_receive(void *ptr);
 
-#endif //COMP4981ASSIGNMENT3_CLIENT_CLIENT_HPP
+#endif
