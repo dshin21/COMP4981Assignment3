@@ -1,28 +1,32 @@
 /*---------------------------------------------------------------------------------------
---	SOURCE FILE:		mux_svr.c -   A simple multiplexed echo server using TCP
+--	SOURCE FILE:	server.cpp -   A multiplexed TCP echo server program that is used in
+--                                 conjunction with a nodejs program.
 --
---	PROGRAM:		mux.exe
+--	PROGRAM:		DChatServer
 --
 --	FUNCTIONS:		Berkeley Socket API
 --
 --	DATE:			February 18, 2001
 --
---	REVISIONS:		(Date and Description)
---				February 20, 2008
---				Added a proper read loop
---				Added REUSEADDR
---				Added fatal error wrapper function
---
+--	REVISIONS:		
+--				    February 20, 2008
+--				        Added a proper read loop
+--				        Added REUSEADDR
+--				        Added fatal error wrapper function
+--                  March 16, 2019
+--				        Added printf statements to integrate nodejs program.
 --
 --	DESIGNERS:		Based on Richard Stevens Example, p165-166
---				Modified & redesigned: Aman Abdulla: February 16, 2001
+--				    Modified & redesigned: Aman Abdulla: February 16, 2001
+--				    Modified & redesigned: Daniel Shin: March 16, 2019
 --
 --				
---	PROGRAMMER:		Aman Abdulla
+--	PROGRAMMER:		Aman Abdulla, Daniel Shin
 --
 --	NOTES:
 --	The program will accept TCP connections from multiple client machines.
 -- 	The program will read data from each client socket and simply echo it back.
+-- 	The program will also print the newly connected client's id and ip to it's peer clients.
 ---------------------------------------------------------------------------------------*/
 
 #include "server.h"
@@ -130,7 +134,7 @@ int main()
                 }
 
                 if (buf[0] == 'q' && buf[1] == 'u' && buf[2] == 'i' && buf[3] == 't')
-                { // here
+                {
                     std::cout << "client exit";
                     clean(i, sockfd);
                 }

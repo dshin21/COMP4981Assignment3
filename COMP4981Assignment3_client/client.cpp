@@ -1,28 +1,31 @@
 /*---------------------------------------------------------------------------------------
---	SOURCE FILE:		tcp_clnt.c - A simple TCP client program.
+--	SOURCE FILE:	client.cpp - A simple TCP client program.
 --
---	PROGRAM:		tclnt.exe
+--	PROGRAM:		DChatClient
 --
 --	FUNCTIONS:		Berkeley Socket API
 --
 --	DATE:			February 2, 2008
 --
---	REVISIONS:		(Date and Description)
---				January 2005
---				Modified the read loop to use fgets.
---				While loop is based on the buffer length 
+--	REVISIONS:		
+--				    January 2005:
+--			    	    Modified the read loop to use fgets.
+--  			    	While loop is based on the buffer length 
+--			    	March 2019:
+--			    	    Refactored into cpp.
+--			    	    Added a thread to print to stdout for nodejs program.
 --
 --
---	DESIGNERS:		Aman Abdulla
+--	DESIGNERS:		Aman Abdulla, Daniel Shin
 --
---	PROGRAMMERS:		Aman Abdulla
+--	PROGRAMMERS:	Aman Abdulla, Daniel Shin
 --
 --	NOTES:
---	The program will establish a TCP connection to a user specifed server.
--- The server can be specified using a fully qualified domain name or and
---	IP address. After the connection has been established the user will be
--- prompted for date. The date string is then sent to the server and the
--- response (echo) back from the server is displayed.
+--	        The program will establish a TCP connection to a user specifed server.
+--          The server can be specified using a fully qualified domain name or and
+--	        IP address. After the connection has been established the user will be
+--          prompted to enter a message. The message string is then sent to the server
+--          and the message will be sent to it's peer clients.
 ---------------------------------------------------------------------------------------*/
 #include "client.h"
 
@@ -80,6 +83,23 @@ int main(int argc, const char *argv[])
     return (0);
 }
 
+/*------------------------------------------------------------------------------------------------------------------
+-- FUNCTION:    client_receive
+--
+-- DATE:        Mar.25, 2019
+--
+-- DESIGNER:    Daniel Shin
+--
+-- PROGRAMMER:  Daniel Shin
+--
+-- INTERFACE:   void *client_receive(void *ptr)
+--
+-- RETURNS:     void
+--
+-- NOTES:
+--              This function runs on a seperate thread to read mesages sent from the server from stdout and
+--              prints it to this client's stdout for the nodejs program to utilize.
+----------------------------------------------------------------------------------------------------------------------*/
 void *client_receive(void *ptr)
 {
     while (true)
